@@ -35,13 +35,13 @@ class PathfinderShell(object):
 
                 # Character Sheet Operations
                 elif user_cmd == 'load':
-                    Character.load_from_file(*user_args)
+                    self.character = Character.load_from_file(*user_args)
 
                 elif user_cmd == 'save':
                     Character.save_to_file(self.character, *user_args)
 
-                elif user_cmd == 'dict_view':
-                    self.character.display_dict()
+                elif user_cmd == 'view':
+                    self.character.view()
 
                 # Final catchall
                 else:

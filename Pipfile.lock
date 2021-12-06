@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f66d372e36c031a646f902fb22cccd61d6841e8d1fa4f296e8e070e3063462a6"
+            "sha256": "9c51c36f8e07bdf980195a44f0efcf51886f2860258572171c9edcea41e5c1c3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -35,6 +35,14 @@
         "pyfinder": {
             "editable": true,
             "path": "."
+        },
+        "tabulate": {
+            "hashes": [
+                "sha256:d7c013fe7abbc5e491394e10fa845f8f32fe54f8dc60c6622c6cf482d25d47e4",
+                "sha256:eb1d13f25760052e8931f2ef80aaf6045a6cceb47514db8beab24cded16f13a7"
+            ],
+            "index": "pypi",
+            "version": "==0.8.9"
         }
     },
     "develop": {}

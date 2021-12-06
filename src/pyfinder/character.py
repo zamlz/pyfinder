@@ -12,8 +12,9 @@ def pprint(*args, **kwargs):
     _pp.pprint(*args, **kwargs)
 
 @dataclass
-class Character(object):
+class Character(data.CharacterData):
     personal_info: data.PersonalInfo = data.PersonalInfo()
+    level_exp: data.LevelExperience = data.LevelExperience()
     ability_scores: data.AbilityScores = data.AbilityScores()
 
     @classmethod
@@ -33,5 +34,7 @@ class Character(object):
             json.dump(asdict(character), f, indent=4)
         logger.info(f"Successfully saved character sheet")
 
-    def display_dict(self):
-        pprint(asdict(self))
+    def view(self):
+        self.personal_info.view()
+        self.level_exp.view()
+        self.ability_scores.view()
