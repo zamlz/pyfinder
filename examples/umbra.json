@@ -1,0 +1,25 @@
+{
+    "personal_info": {
+        "name": "Umbra Elsinthar",
+        "class_list": ["Magus:Bladebound"],
+        "race": "Half Elf",
+        "gender": "Female",
+        "height": "5 ft 7 in",
+        "weight": "150 lbs",
+        "hair": "Silver",
+        "eyes": "Green",
+        "age": 33,
+        "alignment": "Chaotic Good",
+        "homeland": "Kepjar't, Adric Empire",
+        "deity": "",
+        "background": "Pirate"
+    },
+    "ability_scores": {
+        "strength": 16,
+        "dexterity": 11,
+        "constitution": 14,
+        "intelligence": 14,
+        "wisdom": 10,
+        "charisma": 7
+    }
+}
