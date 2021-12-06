@@ -1,61 +1,10 @@
 {
-    "character" : {
-        "name" : "",
-        "level" : "",
-        "race" : "",
-        "size" : "",
-        "gender" : "",
-        "age" : "",
-        "deity" : "",
-        "alignment" : "",
-        "homeland" : "",
-        "height" : "",
-        "weight" : "",
-        "hair" : "",
-        "eyes" : "",
-        "player" : ""
-    },
-    "hit_points" : {
-        "total": -1,
-        "roll_history": [],
-        "current_dmg": 0
-    },
     "ability_scores": {
-        "strength": {
-            "score": 0,
-            "modifier": 0,
-            "temp_adjustment": 0,
-            "temp_modifier": 0
-        },
-        "dexterity": {
-            "score": 0,
-            "modifier": 0,
-            "temp_adjustment": 0,
-            "temp_modifier": 0
-        },
-        "constitution": {
-            "score": 0,
-            "modifier": 0,
-            "temp_adjustment": 0,
-            "temp_modifier": 0
-        },
-        "intelligence": {
-            "score": 0,
-            "modifier": 0,
-            "temp_adjustment": 0,
-            "temp_modifier": 0
-        },
-        "wisdom": {
-            "score": 0,
-            "modifier": 0,
-            "temp_adjustment": 0,
-            "temp_modifier": 0
-        },
-        "charisma": {
-            "score": 0,
-            "modifier": 0,
-            "temp_adjustment": 0,
-            "temp_modifier": 0
-        }
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
     }
 }
