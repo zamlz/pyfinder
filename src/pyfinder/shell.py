@@ -1,59 +1,54 @@
 #!/usr/bin/env python3
 
+import readline
+from cmd import Cmd
 from loguru import logger
 
 from pyfinder.character import Character
+from pyfinder import static
 
-# TODO: Actually implement this
-class CommandCompletion(object):
-    pass
-
-class PathfinderShell(object):
+class PyfinderShell(Cmd):
+    prompt = static.PROMPT
+    intro = static.BANNER
 
     def __init__(self):
-        # TODO: Add logic to make this not hardcoded
-        self.character = Character()
+        self._character = Character()
+        super(PyfinderShell, self).__init__()
 
-    def run(self):
-        while True:
+    def emptyline(self):
+        pass
 
-            user_input = input("PathFinder> ").split(' ')
+    def do_exit(self, args):
+        """Exit the Pyfinder Shell (Equivalent to Quit)"""
+        print("quitting...")
+        return True
 
-            # its kinda guaranteed to have atleast one item
-            user_cmd = user_input[0]
-            user_args = [] if len(user_input) == 1 else user_input[1:]
+    def do_quit(self, args):
+        """Quit the Pyfinder Shell (Equivalent to Exit)"""
+        return self.do_exit(args)
 
-            if user_cmd == '':
-                continue
+    def do_load(self, args):
+        """Load a character from json file"""
+        self._character = Character.load_from_file(args)
 
-            try:
-                logger.debug(f"Got command: {user_cmd} {user_args}")
+    def do_save(self, args):
+        """Save character to json file"""
+        Character.save_to_file(self._character, args)
 
-                if user_cmd == 'quit' or user_cmd == 'exit':
-                    logger.info("Quitting Pathfinder Shell")
-                    exit(0)
+    def do_view(self, args):
+        """View character stats"""
+        self._character.view()
 
-                # Character Sheet Operations
-                elif user_cmd == 'load':
-                    self.character = Character.load_from_file(*user_args)
-
-                elif user_cmd == 'save':
-                    Character.save_to_file(self.character, *user_args)
-
-                elif user_cmd == 'view':
-                    self.character.view()
-
-                # Final catchall
-                else:
-                    logger.error(f"Unkown Command: {user_cmd} {user_args}")
-            except Exception:
-                logger.exception("Unkown Exception Caught")
 
 def start_shell():
     logger.info("Starting PyFinder")
     try:
-        pf_shell = PathfinderShell()
+        pf_shell = PyfinderShell()
     except Exception:
         logger.exception("Unable to setup pyfinder shell!")
         exit(1)
-    pf_shell.run()
+    try:
+        pf_shell.cmdloop()
+    except Exception:
+        logger.exception("Unhandled Exception has been caught")
+        exit(1)
