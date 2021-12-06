@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import readline
 from cmd import Cmd
 from loguru import logger
 
@@ -17,6 +16,12 @@ class PyfinderShell(Cmd):
 
     def emptyline(self):
         pass
+
+    def onecmd(self, line):
+        try:
+            return super(PyfinderShell, self).onecmd(line)
+        except Exception:
+            logger.exception("Exception caught!")
 
     def do_exit(self, args):
         """Exit the Pyfinder Shell (Equivalent to Quit)"""
@@ -50,8 +55,4 @@ def start_shell():
     except Exception:
         logger.exception("Unable to setup pyfinder shell!")
         exit(1)
-    try:
-        pf_shell.cmdloop()
-    except Exception:
-        logger.exception("Unhandled Exception has been caught")
-        exit(1)
+    pf_shell.cmdloop()
