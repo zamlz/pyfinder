@@ -5,7 +5,7 @@ from loguru import logger
 from dataclasses import dataclass, asdict
 from dacite import from_dict
 
-import pyfinder.chardata as data
+import pyfinder.data as data
 
 _pp = pprint.PrettyPrinter(indent=4)
 def pprint(*args, **kwargs):
@@ -13,6 +13,7 @@ def pprint(*args, **kwargs):
 
 @dataclass
 class Character(object):
+    personal_info: data.PersonalInfo = data.PersonalInfo()
     ability_scores: data.AbilityScores = data.AbilityScores()
 
     @classmethod

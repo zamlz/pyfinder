@@ -50,5 +50,10 @@ class PathfinderShell(object):
                 logger.exception("Unkown Exception Caught")
 
 def start_shell():
-    pf_shell = PathfinderShell()
+    logger.info("Starting PyFinder")
+    try:
+        pf_shell = PathfinderShell()
+    except Exception:
+        logger.exception("Unable to setup pyfinder shell!")
+        exit(1)
     pf_shell.run()

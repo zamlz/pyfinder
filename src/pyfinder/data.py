@@ -5,7 +5,8 @@ Contains all classes related to the player character
 
 import abc
 import math
-from dataclasses import dataclass
+from typing import List
+from dataclasses import dataclass, field
 
 
 class CharacterData(abc.ABC):
@@ -14,7 +15,19 @@ class CharacterData(abc.ABC):
 
 @dataclass
 class PersonalInfo(CharacterData):
-    pass
+    name: str = ""
+    class_list: List[str] = field(default_factory=list)
+    race: str = ""
+    gender: str = ""
+    height: str = ""
+    weight: str = ""
+    hair: str = ""
+    eyes: str = ""
+    age: int = 0
+    alignment: str = ""
+    homeland: str = ""
+    deity: str = ""
+    background: str = ""
 
 
 @dataclass
