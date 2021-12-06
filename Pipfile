@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pyfinder = {editable = true, path = "."}
+loguru = "*"
+dacite = "*"
 
 [dev-packages]
 
