@@ -6,18 +6,11 @@ Contains all classes related to the player character
 import abc
 import math
 from typing import List
-from tabulate import tabulate
 from dataclasses import dataclass, field, asdict
 
 
 class CharacterData(abc.ABC):
     pass
-
-    def view(self):
-        table = [[x,y] for x, y in asdict(self).items()]
-        print(f"\n{type(self).__name__}:")
-        print(tabulate(table, ["key", "value"], tablefmt="fancy_grid"))
-
 
 @dataclass
 class PersonalInfo(CharacterData):

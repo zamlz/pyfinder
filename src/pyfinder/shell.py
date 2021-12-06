@@ -37,8 +37,11 @@ class PyfinderShell(Cmd):
 
     def do_view(self, args):
         """View character stats"""
-        self._character.view()
+        self._character.view(args.split())
 
+    def do_dict_view(self, args):
+        """View character stats in dictionary mode"""
+        self._character.dict_view()
 
 def start_shell():
     logger.info("Starting PyFinder")
