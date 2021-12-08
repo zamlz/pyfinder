@@ -18,6 +18,7 @@ class Character(object):
     personal_info: data.PersonalInfo = data.PersonalInfo()
     level_exp: data.LevelExperience = data.LevelExperience()
     ability_scores: data.AbilityScores = data.AbilityScores()
+    hit_points: data.HitPoints = data.HitPoints()
 
     # -----------------------------------------------------------------------
     # Configuration File Management
@@ -50,9 +51,12 @@ class Character(object):
 
     def get_ability_scores(self):
         # add external and temporary buffs/debuffs
-        external = {'DEX': 2}
-        temp = {'CHA': 5}
+        external = {}
+        temp = {}
         return self.ability_scores.get_dict(external=external, temp=temp)
+
+    def get_hit_points(self):
+        return self.hit_points.get_dict()
 
     # -----------------------------------------------------------------------
     # Shell Commands
@@ -78,6 +82,17 @@ class Character(object):
 
     def view_abs(self):
         self.view_ability_scores()
+
+    def view_hit_points(self):
+        hp = self.get_hit_points()
+        table = [[hp['total'], hp['current']]]
+        header = list(hp.keys())
+        print("\nHit Points:")
+        print(tabulate(table, header, tablefmt="fancy_grid"))
+        print("")
+
+    def view_hp(self):
+        self.view_hit_points()
 
     def view_dictionary(self):
         pprint(asdict(self))

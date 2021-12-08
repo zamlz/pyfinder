@@ -10,7 +10,9 @@ from dataclasses import dataclass, field, asdict
 
 
 class CharacterData(abc.ABC):
-    pass
+
+    def get_dict(self):
+        return asdict(self)
 
 @dataclass
 class PersonalInfo(CharacterData):
@@ -27,7 +29,6 @@ class PersonalInfo(CharacterData):
     homeland: str = ""
     deity: str = ""
     background: str = ""
-
 
 @dataclass
 class LevelExperience(CharacterData):
@@ -80,3 +81,11 @@ class AbilityScores(CharacterData):
 
 
         return ability_scores
+
+@dataclass
+class HitPoints(CharacterData):
+    total: int = 0
+    current: int = 0
+
+    def update(self, value):
+        self.current = min(self.total, self.current + value)
