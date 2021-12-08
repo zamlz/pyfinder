@@ -50,8 +50,8 @@ class Character(object):
 
     def get_ability_scores(self):
         # add external and temporary buffs/debuffs
-        external = {}
-        temp = {'DEX': 2}
+        external = {'DEX': 2}
+        temp = {'CHA': 5}
         return self.ability_scores.get_dict(external=external, temp=temp)
 
     # -----------------------------------------------------------------------

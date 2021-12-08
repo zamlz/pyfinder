@@ -56,13 +56,22 @@ class AbilityScores(CharacterData):
         }
 
         for stat in ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']:
-            ext = external.get(stat, 0)
-            total = ability_scores[stat]['BASE'] + ext
+
+            # Get Base
+            total = ability_scores[stat]['BASE']
+
+            # If external adjustments are permanent bonuses (like racial traits)
+            if external:
+                ext = external.get(stat, 0)
+                total += ext
+                ability_scores[stat]['EXTERNAL'] = ext
+                ability_scores[stat]['TOTAL'] = total
+
+            # compute the base modifier
             modifier = math.floor((total - 10) / 2)
-            # save values
-            ability_scores[stat]['EXTERNAL'] = ext
-            ability_scores[stat]['TOTAL'] = total
             ability_scores[stat]['MODIFIER'] = modifier
+
+            # if any temporary adjustments exist, apply them now
             if temp:
                 tmp_bonus = temp.get(stat, 0)
                 tmp_modifier = math.floor((total + tmp_bonus - 10) / 2)
