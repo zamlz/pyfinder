@@ -1,4 +1,5 @@
 
+
 import json
 import pprint
 from loguru import logger
@@ -18,6 +19,10 @@ class Character(object):
     level_exp: data.LevelExperience = data.LevelExperience()
     ability_scores: data.AbilityScores = data.AbilityScores()
 
+    # -----------------------------------------------------------------------
+    # Configuration File Management
+    # -----------------------------------------------------------------------
+
     @classmethod
     def load_from_file(cls, character_json):
         logger.info(f"Loading character sheet from {character_json}")
@@ -35,16 +40,44 @@ class Character(object):
             json.dump(asdict(character), f, indent=4)
         logger.info(f"Successfully saved character sheet")
 
-    def view(self, view_list):
-        for item in view_list:
-            try:
-                attr = getattr(self, item)
-                table = [[x,y] for x, y in asdict(attr).items()]
-                print(f"\n{item}:")
-                print(tabulate(table, ["Label", "Value"], tablefmt="fancy_grid"))
-                print("")
-            except AttributeError:
-                logger.error(f"Unable to find attribute: {item}")
 
-    def dict_view(self):
+    # -----------------------------------------------------------------------
+    # GET_* FUNCTIONS:
+    #   The purpose of these functions will be to collect base data values
+    #   and compute their true values (after traits, items, etc. have been
+    #   applied. In other words, this is how you must get the true values.
+    # -----------------------------------------------------------------------
+
+    def get_ability_scores(self):
+        # add external and temporary buffs/debuffs
+        external = {}
+        temp = {'DEX': 2}
+        return self.ability_scores.get_dict(external=external, temp=temp)
+
+    # -----------------------------------------------------------------------
+    # Shell Commands
+    # -----------------------------------------------------------------------
+
+    def view(self, view_list):
+        if view_list == []:
+            view_list = ['abs']
+        for table in view_list:
+            try:
+                func = getattr(self, 'view_' + table)
+                func()
+            except AttributeError:
+                logger.error(f"Table view doesn't exist! : {table}")
+
+    def view_ability_scores(self):
+        abscr = self.get_ability_scores()
+        table = [[stat, *[v for k, v in values.items()]] for stat, values in abscr.items()]
+        header = list(abscr.get('STR').keys())
+        print("\nAbility Scores:")
+        print(tabulate(table, header, tablefmt="fancy_grid"))
+        print("")
+
+    def view_abs(self):
+        self.view_ability_scores()
+
+    def view_dictionary(self):
         pprint(asdict(self))

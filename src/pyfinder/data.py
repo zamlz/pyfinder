@@ -37,6 +37,7 @@ class LevelExperience(CharacterData):
 
 @dataclass
 class AbilityScores(CharacterData):
+    # These are the BASE stats
     strength: int = 0
     dexterity: int = 0
     constitution: int = 0
@@ -44,30 +45,29 @@ class AbilityScores(CharacterData):
     wisdom: int = 0
     charisma: int = 0
 
-    def _get_base_modifier(self, ability: str):
-        score = getattr(self, ability)
-        return math.floor((score - 10) / 2)
+    def get_dict(self, external={}, temp={}):
+        ability_scores = {
+            'STR': {'BASE': self.strength},
+            'DEX': {'BASE': self.dexterity},
+            'CON': {'BASE': self.constitution},
+            'INT': {'BASE': self.intelligence},
+            'WIS': {'BASE': self.wisdom},
+            'CHA': {'BASE': self.charisma}
+        }
 
-    @property
-    def strength_mod(self):
-        return self._get_base_modifier("strength")
+        for stat in ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']:
+            ext = external.get(stat, 0)
+            total = ability_scores[stat]['BASE'] + ext
+            modifier = math.floor((total - 10) / 2)
+            # save values
+            ability_scores[stat]['EXTERNAL'] = ext
+            ability_scores[stat]['TOTAL'] = total
+            ability_scores[stat]['MODIFIER'] = modifier
+            if temp:
+                tmp_bonus = temp.get(stat, 0)
+                tmp_modifier = math.floor((total + tmp_bonus - 10) / 2)
+                ability_scores[stat]['TMP_BONUS'] = tmp_bonus
+                ability_scores[stat]['TMP_MODIFIER'] = tmp_modifier
 
-    @property
-    def dexterity_mod(self):
-        return self._get_base_modifier("dexterity")
 
-    @property
-    def constitution_mod(self):
-        return self._get_base_modifier("constitution")
-
-    @property
-    def intelligence_mod(self):
-        return self._get_base_modifier("intelligence")
-
-    @property
-    def wisdom_mod(self):
-        return self._get_base_modifier("wisdom")
-
-    @property
-    def charisma_mod(self):
-        return self._get_base_modifier("charisma")
+        return ability_scores
