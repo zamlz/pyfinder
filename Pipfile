@@ -6,11 +6,11 @@ name = "pypi"
 [packages]
 pyfinder = {editable = true, path = "."}
 loguru = "*"
-dacite = "*"
 tabulate = "*"
 pydantic = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.9"
