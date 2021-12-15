@@ -6,18 +6,11 @@ Contains all classes related to the player character
 import abc
 import math
 from typing import List
-from dataclasses import dataclass, field, asdict
+from pydantic import BaseModel
 
-
-class CharacterData(abc.ABC):
-
-    def get_dict(self):
-        return asdict(self)
-
-@dataclass
-class PersonalInfo(CharacterData):
+class PersonalInfo(BaseModel):
     name: str = ""
-    class_list: List[str] = field(default_factory=list)
+    class_list: List[str] = []
     race: str = ""
     gender: str = ""
     height: str = ""
@@ -30,14 +23,11 @@ class PersonalInfo(CharacterData):
     deity: str = ""
     background: str = ""
 
-@dataclass
-class LevelExperience(CharacterData):
+class LevelExperience(BaseModel):
     level: int = 1
     experience: int = 0
 
-
-@dataclass
-class AbilityScores(CharacterData):
+class AbilityScores(BaseModel):
     # These are the BASE stats
     strength: int = 0
     dexterity: int = 0
@@ -82,8 +72,7 @@ class AbilityScores(CharacterData):
 
         return ability_scores
 
-@dataclass
-class HitPoints(CharacterData):
+class HitPoints(BaseModel):
     total: int = 0
     current: int = 0
 

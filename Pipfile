@@ -8,6 +8,7 @@ pyfinder = {editable = true, path = "."}
 loguru = "*"
 dacite = "*"
 tabulate = "*"
+pydantic = "*"
 
 [dev-packages]
 
