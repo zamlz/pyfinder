@@ -34,28 +34,12 @@ class PyfinderKernel():
         logger.info(f"Successfully saved character sheet")
 
     # -----------------------------------------------------------------------
-    # GET_* FUNCTIONS:
-    #   The purpose of these functions will be to collect base data values
-    #   and compute their true values (after traits, items, etc. have been
-    #   applied. In other words, this is how you must get the true values.
-    # -----------------------------------------------------------------------
-
-    def get_ability_scores(self):
-        # add external and temporary buffs/debuffs
-        external = {}
-        temp = {}
-        return self.character.ability_scores.get_dict(external=external, temp=temp)
-
-    def get_hit_points(self):
-        return self.character.hit_points.get_dict()
-
-    # -----------------------------------------------------------------------
     # Shell Commands
     # -----------------------------------------------------------------------
 
     def view(self, view_list):
         if view_list == []:
-            view_list = ['abs']
+            view_list = ['abs', 'hp']
         for table in view_list:
             try:
                 func = getattr(self, 'view_' + table)
@@ -64,7 +48,7 @@ class PyfinderKernel():
                 logger.error(f"Table view doesn't exist! : {table}")
 
     def view_ability_scores(self):
-        abscr = self.get_ability_scores()
+        abscr = self.character.get_ability_scores()
         table = [[stat, *[v for k, v in values.items()]] for stat, values in abscr.items()]
         header = list(abscr.get('STR').keys())
         print("\nAbility Scores:")
@@ -75,7 +59,7 @@ class PyfinderKernel():
         self.view_ability_scores()
 
     def view_hit_points(self):
-        hp = self.get_hit_points()
+        hp = self.character.get_hit_points()
         table = [[hp['total'], hp['current']]]
         header = list(hp.keys())
         print("\nHit Points:")

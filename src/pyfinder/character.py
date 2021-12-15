@@ -36,7 +36,7 @@ class AbilityScores(BaseModel):
     wisdom: int = 0
     charisma: int = 0
 
-    def get_dict(self, external={}, temp={}):
+    def get_abs_dict(self, external={}, temp={}):
         ability_scores = {
             'STR': {'BASE': self.strength},
             'DEX': {'BASE': self.dexterity},
@@ -84,3 +84,12 @@ class Character(BaseModel):
     level_exp: LevelExperience = LevelExperience()
     ability_scores: AbilityScores = AbilityScores()
     hit_points: HitPoints = HitPoints()
+
+    def get_ability_scores(self):
+        # add external and temporary buffs/debuffs
+        external = {}
+        temp = {}
+        return self.ability_scores.get_abs_dict(external=external, temp=temp)
+
+    def get_hit_points(self):
+        return self.hit_points.dict()
