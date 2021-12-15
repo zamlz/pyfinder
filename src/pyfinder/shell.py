@@ -3,7 +3,7 @@
 from cmd import Cmd
 from loguru import logger
 
-from pyfinder.character import Character
+from pyfinder.kernel import PyfinderKernel
 from pyfinder import static
 
 class PyfinderShell(Cmd):
@@ -11,7 +11,7 @@ class PyfinderShell(Cmd):
     intro = static.BANNER
 
     def __init__(self):
-        self._character = Character()
+        self.kernel = PyfinderKernel()
         super(PyfinderShell, self).__init__()
 
     def emptyline(self):
@@ -34,19 +34,19 @@ class PyfinderShell(Cmd):
 
     def do_load(self, args):
         """Load a character from json file"""
-        self._character = Character.load_from_file(args)
+        self.kernel.load_from_file(args)
 
     def do_save(self, args):
         """Save character to json file"""
-        Character.save_to_file(self._character, args)
+        self.kernel.save_to_file(args)
 
     def do_view(self, args):
         """View character stats"""
-        self._character.view(args.split())
+        self.kernel.view(args.split())
 
     def do_dict_view(self, args):
         """View character stats in dictionary mode"""
-        self._character.dict_view()
+        self.kernel.dict_view()
 
 def start_shell():
     logger.info("Starting PyFinder")

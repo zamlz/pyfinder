@@ -1,93 +1,86 @@
-import json
-import pprint
-from loguru import logger
-from tabulate import tabulate
+#!/usr/bin/env python3
+"""
+Contains all classes related to the player character
+"""
+
+import abc
+import math
+from typing import List
 from pydantic import BaseModel
 
-import pyfinder.data as data
+class PersonalInfo(BaseModel):
+    name: str = ""
+    class_list: List[str] = []
+    race: str = ""
+    gender: str = ""
+    height: str = ""
+    weight: str = ""
+    hair: str = ""
+    eyes: str = ""
+    age: int = 0
+    alignment: str = ""
+    homeland: str = ""
+    deity: str = ""
+    background: str = ""
 
-_pp = pprint.PrettyPrinter(indent=4)
-def pprint(*args, **kwargs):
-    _pp.pprint(*args, **kwargs)
+class LevelExperience(BaseModel):
+    level: int = 1
+    experience: int = 0
+
+class AbilityScores(BaseModel):
+    # These are the BASE stats
+    strength: int = 0
+    dexterity: int = 0
+    constitution: int = 0
+    intelligence: int = 0
+    wisdom: int = 0
+    charisma: int = 0
+
+    def get_dict(self, external={}, temp={}):
+        ability_scores = {
+            'STR': {'BASE': self.strength},
+            'DEX': {'BASE': self.dexterity},
+            'CON': {'BASE': self.constitution},
+            'INT': {'BASE': self.intelligence},
+            'WIS': {'BASE': self.wisdom},
+            'CHA': {'BASE': self.charisma}
+        }
+
+        for stat in ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']:
+
+            # Get Base
+            total = ability_scores[stat]['BASE']
+
+            # If external adjustments are permanent bonuses (like racial traits)
+            if external:
+                ext = external.get(stat, 0)
+                total += ext
+                ability_scores[stat]['EXTERNAL'] = ext
+                ability_scores[stat]['TOTAL'] = total
+
+            # compute the base modifier
+            modifier = math.floor((total - 10) / 2)
+            ability_scores[stat]['MODIFIER'] = modifier
+
+            # if any temporary adjustments exist, apply them now
+            if temp:
+                tmp_bonus = temp.get(stat, 0)
+                tmp_modifier = math.floor((total + tmp_bonus - 10) / 2)
+                ability_scores[stat]['TMP_BONUS'] = tmp_bonus
+                ability_scores[stat]['TMP_MODIFIER'] = tmp_modifier
+
+
+        return ability_scores
+
+class HitPoints(BaseModel):
+    total: int = 0
+    current: int = 0
+
+    def update(self, value):
+        self.current = min(self.total, self.current + value)
 
 class Character(BaseModel):
-    personal_info: data.PersonalInfo = data.PersonalInfo()
-    level_exp: data.LevelExperience = data.LevelExperience()
-    ability_scores: data.AbilityScores = data.AbilityScores()
-    hit_points: data.HitPoints = data.HitPoints()
-
-    # -----------------------------------------------------------------------
-    # Configuration File Management
-    # -----------------------------------------------------------------------
-
-    @classmethod
-    def load_from_file(cls, character_json):
-        logger.info(f"Loading character sheet from {character_json}")
-        with open(character_json, 'r') as f:
-            char_dict = json.load(f)
-        logger.debug(char_dict)
-        character = cls.parse_obj(char_dict)
-        logger.info(f"Successfully loaded character sheet")
-        return character
-
-    @classmethod
-    def save_to_file(cls, character, character_json):
-        logger.info(f"Saving character sheet to {character_json}")
-        with open(character_json, 'w') as f:
-            json.dump(character.dict(), f, indent=4)
-        logger.info(f"Successfully saved character sheet")
-
-    # -----------------------------------------------------------------------
-    # GET_* FUNCTIONS:
-    #   The purpose of these functions will be to collect base data values
-    #   and compute their true values (after traits, items, etc. have been
-    #   applied. In other words, this is how you must get the true values.
-    # -----------------------------------------------------------------------
-
-    def get_ability_scores(self):
-        # add external and temporary buffs/debuffs
-        external = {}
-        temp = {}
-        return self.ability_scores.get_dict(external=external, temp=temp)
-
-    def get_hit_points(self):
-        return self.hit_points.get_dict()
-
-    # -----------------------------------------------------------------------
-    # Shell Commands
-    # -----------------------------------------------------------------------
-
-    def view(self, view_list):
-        if view_list == []:
-            view_list = ['abs']
-        for table in view_list:
-            try:
-                func = getattr(self, 'view_' + table)
-                func()
-            except AttributeError:
-                logger.error(f"Table view doesn't exist! : {table}")
-
-    def view_ability_scores(self):
-        abscr = self.get_ability_scores()
-        table = [[stat, *[v for k, v in values.items()]] for stat, values in abscr.items()]
-        header = list(abscr.get('STR').keys())
-        print("\nAbility Scores:")
-        print(tabulate(table, header, tablefmt="fancy_grid"))
-        print("")
-
-    def view_abs(self):
-        self.view_ability_scores()
-
-    def view_hit_points(self):
-        hp = self.get_hit_points()
-        table = [[hp['total'], hp['current']]]
-        header = list(hp.keys())
-        print("\nHit Points:")
-        print(tabulate(table, header, tablefmt="fancy_grid"))
-        print("")
-
-    def view_hp(self):
-        self.view_hit_points()
-
-    def view_dictionary(self):
-        pprint(asdict(self))
+    personal_info: PersonalInfo = PersonalInfo()
+    level_exp: LevelExperience = LevelExperience()
+    ability_scores: AbilityScores = AbilityScores()
+    hit_points: HitPoints = HitPoints()
