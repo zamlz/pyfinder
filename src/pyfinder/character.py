@@ -45,31 +45,26 @@ class AbilityScores(BaseModel):
             'WIS': {'BASE': self.wisdom},
             'CHA': {'BASE': self.charisma}
         }
-
         for stat in ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']:
-
             # Get Base
             total = ability_scores[stat]['BASE']
-
             # If external adjustments are permanent bonuses (like racial traits)
             if external:
                 ext = external.get(stat, 0)
                 total += ext
                 ability_scores[stat]['EXTERNAL'] = ext
                 ability_scores[stat]['TOTAL'] = total
-
             # compute the base modifier
             modifier = math.floor((total - 10) / 2)
             ability_scores[stat]['MODIFIER'] = modifier
-
             # if any temporary adjustments exist, apply them now
             if temp:
                 tmp_bonus = temp.get(stat, 0)
-                tmp_modifier = math.floor((total + tmp_bonus - 10) / 2)
+                tmp_total = total + tmp_bonus
+                tmp_modifier = math.floor((tmp_total - 10) / 2)
                 ability_scores[stat]['TMP_BONUS'] = tmp_bonus
+                ability_scores[stat]['TMP_TOTAL'] = tmp_total
                 ability_scores[stat]['TMP_MODIFIER'] = tmp_modifier
-
-
         return ability_scores
 
 class HitPoints(BaseModel):
