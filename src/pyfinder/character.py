@@ -88,3 +88,26 @@ class Character(BaseModel):
 
     def get_hit_points(self):
         return self.hit_points.dict()
+
+    def get_initiative(self):
+        misc_mod = 0
+        dex_abs = self.get_ability_scores()['DEX']
+        dex_mod = dex_abs.get('TMP_MODIFIER', dex_abs['MODIFIER'])
+        return {'INITIATIVE': dex_mod + misc_mod}
+
+    def get_armor_class(self):
+        dex_abs = self.get_ability_scores()['DEX']
+        dex_mod = dex_abs.get('TMP_MODIFIER', dex_abs['MODIFIER'])
+        armor_bonus = 0
+        shield_bonus = 0
+        size_mod = 0
+        natural_armor = 0
+        deflection_mod = 0
+        misc_mod_ac = 0
+        misc_mod_tac = 0
+        misc_mod_ffac = 0
+        return {
+            'AC': 10 + armor_bonus + shield_bonus + dex_mod + size_mod + natural_armor + deflection_mod + misc_mod_ac,
+            'TOUCH_AC': 10 + dex_mod + size_mod + deflection_mod + misc_mod_tac,
+            'FLAT_FOOTED_AC': 10 + armor_bonus + shield_bonus + size_mod + natural_armor + deflection_mod +misc_mod_ffac
+        }
