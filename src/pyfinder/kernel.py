@@ -69,5 +69,11 @@ class PyfinderKernel():
     def view_hp(self):
         self.view_hit_points()
 
+    def view_initiative(self):
+        raise NotImplemementedError
+
+    def view_armor_class(self):
+        raise NotImplemementedError
+
     def view_dictionary(self):
         pprint(self.character.dict())
