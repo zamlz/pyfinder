@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+import os
 from cmd import Cmd
 from loguru import logger
 
 from pyfinder.kernel import PyfinderKernel
 from pyfinder import static
+
+clear_screen = lambda: os.system('cls' if os.name == 'nt' else 'clear')
 
 class PyfinderShell(Cmd):
     prompt = static.PROMPT
@@ -22,6 +25,10 @@ class PyfinderShell(Cmd):
             return super(PyfinderShell, self).onecmd(line)
         except Exception:
             logger.exception("Exception caught!")
+
+    def do_clear(self, args):
+        """Clear the screen"""
+        clear_screen()
 
     def do_exit(self, args):
         """Exit the Pyfinder Shell (Equivalent to Quit)"""
