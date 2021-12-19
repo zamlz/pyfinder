@@ -69,10 +69,7 @@ class AbilityScores(BaseModel):
 
 class HitPoints(BaseModel):
     total: int = 0
-    current: int = 0
-
-    def update(self, value):
-        self.current = min(self.total, self.current + value)
+    damage: int = 0
 
 class Character(BaseModel):
     personal_info: PersonalInfo = PersonalInfo()
@@ -86,28 +83,59 @@ class Character(BaseModel):
         temp = {}
         return self.ability_scores.get_abs_dict(external=external, temp=temp)
 
-    def get_hit_points(self):
-        return self.hit_points.dict()
+    @property
+    def total_hit_points(self):
+        return self.hit_points.total
 
-    def get_initiative(self):
+    @property
+    def current_hit_points(self):
+        return self.hit_points.total - self.hit_points.damage
+
+    @property
+    def initiative(self):
         misc_mod = 0
         dex_abs = self.get_ability_scores()['DEX']
         dex_mod = dex_abs.get('TMP_MODIFIER', dex_abs['MODIFIER'])
-        return {'INITIATIVE': dex_mod + misc_mod}
+        return dex_mod + misc_mod
 
-    def get_armor_class(self):
+    @property
+    def armor_class(self):
         dex_abs = self.get_ability_scores()['DEX']
         dex_mod = dex_abs.get('TMP_MODIFIER', dex_abs['MODIFIER'])
-        armor_bonus = 0
-        shield_bonus = 0
-        size_mod = 0
-        natural_armor = 0
-        deflection_mod = 0
         misc_mod_ac = 0
+        return sum([10, self.armor_bonus, self.shield_bonus, dex_mod,
+                   self.natural_armor, self.deflection_modifier, misc_mod_ac])
+
+    @property
+    def touch_armor_class(self):
+        dex_abs = self.get_ability_scores()['DEX']
+        dex_mod = dex_abs.get('TMP_MODIFIER', dex_abs['MODIFIER'])
         misc_mod_tac = 0
+        return sum([10, dex_mod, self.size_modifier,
+                   self.deflection_modifier, misc_mod_tac])
+
+    @property
+    def flat_footed_armor_class(self):
         misc_mod_ffac = 0
-        return {
-            'AC': 10 + armor_bonus + shield_bonus + dex_mod + size_mod + natural_armor + deflection_mod + misc_mod_ac,
-            'TOUCH_AC': 10 + dex_mod + size_mod + deflection_mod + misc_mod_tac,
-            'FLAT_FOOTED_AC': 10 + armor_bonus + shield_bonus + size_mod + natural_armor + deflection_mod +misc_mod_ffac
-        }
+        return sum([10, self.armor_bonus, self.shield_bonus, self.size_modifier,
+                   self.natural_armor, self.deflection_modifier, misc_mod_ffac])
+
+    @property
+    def armor_bonus(self):
+        return 0
+
+    @property
+    def shield_bonus(self):
+        return 0
+
+    @property
+    def size_modifier(self):
+        return 0
+
+    @property
+    def natural_armor(self):
+        return 0
+
+    @property
+    def deflection_modifier(self):
+        return 0
