@@ -7,7 +7,10 @@ from loguru import logger
 from pyfinder.kernel import PyfinderKernel
 from pyfinder import static
 
-clear_screen = lambda: os.system('cls' if os.name == 'nt' else 'clear')
+if os.name == 'nt':
+    clear_screen = lambda: os.system('cls')
+else:
+    clear_screen = lambda: os.system('clear')
 
 class PyfinderShell(Cmd):
     prompt = static.PROMPT
